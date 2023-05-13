@@ -1,6 +1,5 @@
 package client;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
@@ -8,7 +7,6 @@ import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -32,17 +30,32 @@ public class Myclient extends JFrame{
       jta.setBackground(Color.LIGHT_GRAY);
       jta.setFont(new Font("宋体", Font.BOLD, 13));
       jtf.setBounds(10, 320, 400, 30);
-      jtf.setText("请输入sql语句:");
       jb.setBounds(440, 320, 100, 30);
       cc.add(jb);
       cc.add(jsp);
       cc.add(jtf);
       setVisible(true);
+
+      jb.addActionListener(new java.awt.event.ActionListener() {
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+            sendActionPerformed(evt);
+         }
+      });
+   }
+
+   private void sendActionPerformed(java.awt.event.ActionEvent evt) {
+      String sql = jtf.getText();
+      jta.append("发送的sql语句为："+sql+"\n");
+      try {
+         socket.getOutputStream().write(sql.getBytes()); 
+         socket.getOutputStream().flush(); 
+      }catch(Exception e){
+         e.printStackTrace();
+      }
    }
 
    private void connect() {
-      for(int i=0;i<30;i++)
-         jta.append("正在连接服务器...\n");
+      jta.append("正在连接服务器...\n");
       try {
          socket = new Socket("127.0.0.1",5143);
          jta.append("连接成功！\n");
