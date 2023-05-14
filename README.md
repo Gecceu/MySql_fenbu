@@ -31,4 +31,10 @@ Meanwhile, the compiled output files will be generated in the `bin` folder by de
 The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
 
 
+非创建表--->解析表名----返回ip---客户端通信
+
+创建表--->负载均衡---创建----返回信息
+
+子节点初始化
+serversocket->zookeeper->
 

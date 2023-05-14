@@ -54,7 +54,7 @@ public class Myclient extends JFrame{
       }
    }
 
-   private void connect() {
+   public void connect() {
       jta.append("正在连接服务器...\n");
       try {
          socket = new Socket("127.0.0.1",5143);
@@ -63,10 +63,5 @@ public class Myclient extends JFrame{
          e.printStackTrace();
          jta.append("连接失败！\n");
       }
-   }
-
-   public static void main(String[] args){
-      Myclient client = new Myclient();
-      client.connect();
    }
 }

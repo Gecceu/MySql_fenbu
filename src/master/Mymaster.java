@@ -25,16 +25,17 @@ public class Mymaster extends JFrame{
         cc = this.getContentPane();
         setLayout(null);     //设置为绝对布局
         JScrollPane jsp = new JScrollPane(jta);
-        jsp.setBounds(0, 0, 600, 400);
+        jsp.setBounds(0, 0, 560, 380);
         jta.setBackground(Color.LIGHT_GRAY);
         jta.setFont(new Font("宋体", Font.BOLD, 13));
         cc.add(jsp);
         setVisible(true);
     }
 
-    private void getServer(){
+    public void getServer(){
         try{
             server = new ServerSocket(5143);
+        
             jta.append("服务器启动成功\n");
             while(true){
                 jta.append("等待客户连接\n");
@@ -72,14 +73,6 @@ public class Mymaster extends JFrame{
                 e.printStackTrace();
             }
         }
-        
-    }
-
-    public static void main(String[] args){
-        Mymaster master = new Mymaster();
-        master.getServer();
-    }
-
-    
+    }   
 }
 
