@@ -6,8 +6,13 @@ import java.awt.Container;
 import java.awt.Font;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JTextArea;
+
+import utils.MasterPecess;
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
@@ -15,7 +20,9 @@ public class Mymaster extends JFrame{
     private JTextArea jta = new JTextArea(); //用于提示信息的文本域
     private Container cc;
     private ServerSocket server;
-    private Socket socket;
+    private Socket fromclientsocket;
+
+    public static Map<String, String> TableInfo = new HashMap<>(); //存储表名和ip的映射
 
     public Mymaster(){
         super("主节点服务器");
@@ -39,8 +46,8 @@ public class Mymaster extends JFrame{
             jta.append("服务器启动成功\n");
             while(true){
                 jta.append("等待客户连接\n");
-                socket = server.accept();
-                Clienthandler handler = new Clienthandler(socket, jta, cc);
+                fromclientsocket = server.accept();
+                Clienthandler handler = new Clienthandler(fromclientsocket, jta, cc);
                 Thread thread = new Thread(handler);
                 thread.start();
             }
@@ -61,13 +68,15 @@ public class Mymaster extends JFrame{
         @Override
         public void run(){
             try{
+                String cilentip=socket.getInetAddress().getHostAddress();
                 jta.append("客户端连接成功\n");
-                jta.append("客户端ip："+socket.getInetAddress().getHostAddress()+"\n");
+                jta.append("客户端ip："+cilentip+"\n");
                 while(true){
                     byte[] buf = new byte[1024];
                     int len = socket.getInputStream().read(buf);
                     String sql = new String(buf, 0, len);
                     jta.append("接收到的sql语句为："+sql+"\n");
+                    MasterPecess.JudgeType(sql);
                 }
             }catch(Exception e){
                 e.printStackTrace();
