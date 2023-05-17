@@ -18,12 +18,12 @@ public class VisitMysql {
     private static ResultSet resultSet;
 
     //查询语句
-    public static List<Map<String,Object>> Select (String sql) throws SQLException {
+    public static List<Map<String,Object>> select (String sql) throws SQLException {
 
         connection = MysqlConnect.getConnection();
         
         if(connection == null){
-            System.out.println("连接失败");
+            System.out.println("数据库连接失败");
         }
 
         statement = connection.createStatement();
@@ -58,12 +58,12 @@ public class VisitMysql {
     }
 
     //非查询语句
-    public static int Update(String sql) throws SQLException {
+    public static int update(String sql) throws SQLException {
         
         connection = MysqlConnect.getConnection();
         
         if(connection == null){
-            System.out.println("连接失败");
+            System.out.println("数据库连接失败");
         }
 
         statement = connection.createStatement();
@@ -77,24 +77,26 @@ public class VisitMysql {
     }
     
     //解析sql语句
-   public static void Analyse(String sql) throws SQLException{
+   public static boolean analyse(String sql) throws SQLException{
     
     String str = sql.toLowerCase();
     
     if(str.indexOf("select")>=0){ 
-        List<Map<String,Object>> list = new ArrayList<>();
-        list = Select(sql);
-        PrintResultset(list);
+        //List<Map<String,Object>> list = new ArrayList<>();
+        //list = select(sql);
+        //printResultset(list);
+        return true;
     }else{
-        int row;
-        row = Update(sql);
-        System.out.println("本次操作改变了"+row+"行");
+        //int row;
+        //row = update(sql);
+        //System.out.println("本次操作改变了"+row+"行");
+        return false;
     }
 
    }
 
    //打印结果
-   public static void PrintResultset(List<Map<String,Object>> list) throws SQLException{
+   public static void printResultset(List<Map<String,Object>> list) throws SQLException{
 
     System.out.println(list.get(1).keySet());
     
@@ -102,4 +104,26 @@ public class VisitMysql {
         System.out.println(list.get(i).values());
    }
 
+    //获取表名tableList
+   public static ArrayList<String>  getTableList() throws SQLException{
+
+    ArrayList<String> tableList = new ArrayList<>();
+    
+    connection = MysqlConnect.getConnection();
+
+    statement = connection.createStatement();
+
+    String sql = "show tables";
+
+    if(connection == null){
+        System.out.println("数据库连接失败");
+    }
+    resultSet = statement.executeQuery(sql);
+
+    while(resultSet.next()){
+        //System.out.println(resultSet.getString(1));
+        tableList.add(resultSet.getString(1));
+    }
+    return tableList;
+   }
 }
