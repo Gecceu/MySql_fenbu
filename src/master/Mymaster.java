@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class Mymaster extends JFrame{
     public static final int Region_Port =5143;
-    public static final int Client_Port = 5144;
+    public static final int Client_Port = 5307;
 
     private JTextArea jta = new JTextArea(); //用于提示信息的文本域
     private Container cc;
