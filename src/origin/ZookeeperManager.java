@@ -96,7 +96,11 @@ public class ZookeeperManager {
             Socket masterSocket = new Socket(MASTER_SERVER_IP, MASTER_PORT);
             OutputStream outputStream = masterSocket.getOutputStream();
             DataOutputStream out = new DataOutputStream(outputStream);
-            out.writeUTF(REGION_SERVER_IP);              //发送ip地址
+            
+            //发送ip地址和表名
+            out.writeUTF(REGION_SERVER_IP);              
+            for(int i=0;i<table_list.size();i++)
+            out.writeUTF(table_list.get(i)+" ");
             InputStream inputStream = masterSocket.getInputStream();
             DataInputStream in = new DataInputStream(inputStream);
             String name = in.readUTF();
