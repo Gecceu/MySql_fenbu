@@ -9,7 +9,7 @@ public class MysqlConnect {
 
     private static String UserName = "root";
 
-    private static String Password = "mysql123";
+    private static String Password = "dbcourse";
     
     //获取链接
     public static Connection getConnection() {

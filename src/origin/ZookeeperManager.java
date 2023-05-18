@@ -71,13 +71,14 @@ public class ZookeeperManager {
             } else {
                 //使用ftp备份表和索引文件
                 
+                /*
                 FTPConnector.unloadFile("table_catalog");
                 FTPConnector.unloadFile("index_catalog");
                 for (String t : table_list) {
                     FTPConnector.unloadFile(t);
                     FTPConnector.unloadFile(t + "_index.index");
                 }
-                
+                */
             }
             //创建zk节点，值为ip地址和tableList
             client.create().withMode(CreateMode.EPHEMERAL).forPath(path, data.toString().getBytes());

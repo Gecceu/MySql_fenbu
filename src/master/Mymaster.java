@@ -203,6 +203,9 @@ public class Mymaster extends JFrame{
             @Override
             public void run(){
                 master.RegionServer(Region_Port);
+                while(true){
+                    master.jta.append(Mymaster.directory.toString() + "\n");
+                }
             }
         });
         regionThread.start();
