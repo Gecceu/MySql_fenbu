@@ -36,7 +36,8 @@ public class ZookeeperConnector extends Thread{
         client.start();
 
         // 添加PathChildrenCache，对指定路径节点的一级子目录监听，不对该节点的操作监听，对其子目录的增删改操作监听
-        PathChildrenCache cache = new PathChildrenCache(client, "/", true);
+        
+        PathChildrenCache cache = new PathChildrenCache(client, "/", true); 
         cache.start();
         cache.getListenable().addListener((c, event) ->{
             System.out.println(event.getType());

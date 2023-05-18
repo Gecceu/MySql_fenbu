@@ -171,16 +171,17 @@ public class Mymaster extends JFrame{
                 
                 String response;
                 String url = input_stream.readUTF();
-
+                jta.append("接收到的url为："+url+"\n");
                 //查找注册节点 IP：name
                 if(region_names.containsKey(url)){
-                    jta.append("[INFO] " + url + " reconnected.\n");
+                    jta.append("123");
                     response = region_names.get(url);
                 }
                 else{//新节点注册
                     response = "/server-" + regions_num; // region name
                     regions_num++;
                     region_names.put(url, response);
+                    jta.append(url + " " + response + "\n");
                 }
 
                 DataOutputStream output_stream = new DataOutputStream(socket.getOutputStream());
@@ -203,9 +204,6 @@ public class Mymaster extends JFrame{
             @Override
             public void run(){
                 master.RegionServer(Region_Port);
-                while(true){
-                    master.jta.append(Mymaster.directory.toString() + "\n");
-                }
             }
         });
         regionThread.start();

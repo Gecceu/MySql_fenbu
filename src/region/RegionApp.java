@@ -1,6 +1,6 @@
-package origin;
+package region;
 
-public class RegionServer {
+public class RegionApp {
   
     static final int FAILURE_PORT = 8010;   //备份端口
 

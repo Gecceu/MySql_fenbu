@@ -1,4 +1,4 @@
-package origin;
+package region;
 
 import java.awt.Color;
 import java.awt.Component;
