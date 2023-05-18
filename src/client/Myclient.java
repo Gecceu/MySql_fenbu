@@ -54,10 +54,10 @@ public class Myclient extends JFrame{
       }
    }
 
-   public void connect() {
+   public void connect(int port) {
       jta.append("正在连接服务器...\n");
       try {
-         socket = new Socket("127.0.0.1",5143);
+         socket = new Socket("127.0.0.1",port);
          jta.append("连接成功！\n");
       }catch(Exception e){
          e.printStackTrace();

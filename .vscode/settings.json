@@ -1,9 +1,26 @@
 {
   "java.project.sourcePaths": ["src"],
   "java.project.outputPath": "bin",
-  "java.project.referencedLibraries": [
-    "lib/**/*.jar",
-    "m:\\fennbusql\\mysql-connector-java-8.0.28.jar",
-    "m:\\fennbusql\\zookeeper-3.5.7.jar"
-  ]
+  "java.project.referencedLibraries": {
+    "include": [
+      "lib/**/*.jar",
+      "m:\\fennbusql\\mysql-connector-java-8.0.28.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\commons-net-3.3.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\curator-client-5.2.1.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\curator-client-5.2.1-sources.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\curator-framework-5.2.1.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\curator-framework-5.2.1-sources.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\curator-recipes-5.2.1.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\curator-recipes-5.2.1-sources.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\mysql-connector-java-8.0.28.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\slf4j-api-2.0.7.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\slf4j-jdk14-2.0.7.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\zookeeper-3.6.3.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\zookeeper-3.6.3-sources.jar",
+      "c:\\Users\\liang\\Documents\\WeChat Files\\wxid_k4m3lvckread22\\FileStorage\\File\\2023-05\\lib(1)\\lib\\zookeeper-jute-3.6.3.jar"
+    ],
+    "exclude": [
+      "m:\\fennbusql\\zookeeper-3.5.7.jar"
+    ]
+  }
 }

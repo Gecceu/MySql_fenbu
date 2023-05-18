@@ -4,15 +4,14 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JTextArea;
-
-import utils.MasterPecess;
-
+import javax.xml.crypto.Data;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
@@ -21,12 +20,14 @@ import java.util.List;
 import java.util.Map;
 
 public class Mymaster extends JFrame{
+    public static final int Region_Port =5143;
+    public static final int Client_Port = 5144;
+
     private JTextArea jta = new JTextArea(); //用于提示信息的文本域
     private Container cc;
-    private ServerSocket server;
-    private Socket fromclientsocket;
-
-    public static Map<String, String> TableInfo = new HashMap<>(); //存储表名和ip的映射
+    private ServerSocket clientserver;
+    private ServerSocket regionserver;
+    private Socket socket;
 
     public static HashMap<String, List<String>> directory = new HashMap<>(); // region_ip : tables
     
@@ -34,6 +35,10 @@ public class Mymaster extends JFrame{
     
     public static int regions_num = 0;
 
+    /**
+     * 构造函数
+     * 初始化界面
+     */
     public Mymaster(){
         super("主节点服务器");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,15 +54,38 @@ public class Mymaster extends JFrame{
         setVisible(true);
     }
 
-    public void getServer(){
+    /**
+     * 启动监听客户端服务器
+     * @param port
+     */
+    public void CilentServer(int port){
         try{
-            server = new ServerSocket(5143);
-        
-            jta.append("服务器启动成功\n");
+            clientserver = new ServerSocket(port);
+
             while(true){
                 jta.append("等待客户连接\n");
-                fromclientsocket = server.accept();
-                Clienthandler handler = new Clienthandler(fromclientsocket, jta, cc);
+                socket = clientserver.accept();
+                Clienthandler handler = new Clienthandler(socket, jta);
+                Thread thread = new Thread(handler);
+                thread.start();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 启动监听从服务器
+     * @param port
+     */
+    public void RegionServer(int port){
+        try{
+            regionserver = new ServerSocket(port);
+
+            while(true){
+                jta.append("等待从服务器连接\n");
+                socket = regionserver.accept();
+                Regionhandler handler = new Regionhandler(socket, jta);
                 Thread thread = new Thread(handler);
                 thread.start();
             }
@@ -79,7 +107,7 @@ public class Mymaster extends JFrame{
     }
 
 
-    /*
+    /**
      * 负载均衡
      */
     public String getMostSpareRegion(){
@@ -94,11 +122,14 @@ public class Mymaster extends JFrame{
         return spare_region_addr;
     }
 
+    /**
+     * 客户端处理线程
+     */
     private static class Clienthandler implements Runnable{
         private Socket socket;
         private JTextArea jta;
 
-        public Clienthandler(Socket socket, JTextArea jta, Component cc){
+        public Clienthandler(Socket socket, JTextArea jta){
             this.socket = socket;
             this.jta = jta;
         }
@@ -106,20 +137,86 @@ public class Mymaster extends JFrame{
         @Override
         public void run(){
             try{
-                String cilentip=socket.getInetAddress().getHostAddress();
                 jta.append("客户端连接成功\n");
-                jta.append("客户端ip："+cilentip+"\n");
+                jta.append("客户端ip："+socket.getInetAddress().getHostAddress()+"\n");
                 while(true){
                     byte[] buf = new byte[1024];
                     int len = socket.getInputStream().read(buf);
                     String sql = new String(buf, 0, len);
                     jta.append("接收到的sql语句为："+sql+"\n");
-                    MasterPecess.JudgeType(sql);
                 }
             }catch(Exception e){
+                jta.append("客户端断开连接或错误\n");
                 e.printStackTrace();
             }
         }
-    }   
+    }
+    
+    /**
+     * 从服务器处理线程
+     */
+    private static class Regionhandler implements Runnable{
+        private Socket socket;
+        private JTextArea jta;
+
+        public Regionhandler(Socket socket, JTextArea jta){
+            this.socket = socket;
+            this.jta = jta;
+        }
+
+        @Override
+        public void run() {
+            try{
+                DataInputStream input_stream = new DataInputStream(socket.getInputStream());
+                
+                String response;
+                String url = input_stream.readUTF();
+
+                //查找注册节点 IP：name
+                if(region_names.containsKey(url)){
+                    jta.append("[INFO] " + url + " reconnected.\n");
+                    response = region_names.get(url);
+                }
+                else{//新节点注册
+                    response = "/server-" + regions_num; // region name
+                    regions_num++;
+                    region_names.put(url, response);
+                }
+
+                DataOutputStream output_stream = new DataOutputStream(socket.getOutputStream());
+                output_stream.writeUTF(response);
+
+                // close
+                socket.close();
+
+            }catch(Exception e){
+                e.printStackTrace();
+                jta.append("[ERROR] Cannot connect to region server.\n");
+            }
+        }
+    }
+
+    public static void main(String args[]) throws IOException{
+        Mymaster master = new Mymaster();
+
+        Thread regionThread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                master.RegionServer(Region_Port);
+            }
+        });
+        regionThread.start();
+
+        Thread clientThread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                master.CilentServer(Client_Port);
+            }
+        });
+        clientThread.start();
+
+        Thread zookeeper_thread = new ZookeeperConnector(directory);
+        zookeeper_thread.start();
+    }
 }
 
