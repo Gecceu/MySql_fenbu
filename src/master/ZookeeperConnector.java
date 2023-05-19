@@ -25,6 +25,16 @@ public class ZookeeperConnector extends Thread{
         }
     }
 
+    @Override
+    public void run() {
+        super.start();
+        try {
+            getNodeInfo(Mymaster.directory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void getNodeInfo(HashMap<String, List<String>> directory) throws Exception{
         // 重连策略
         RetryPolicy retry_policy = new ExponentialBackoffRetry(2000, 3);
@@ -32,6 +42,7 @@ public class ZookeeperConnector extends Thread{
         CuratorFramework client = CuratorFrameworkFactory.builder()
                 .connectString(SERVER_STRING)
                 .retryPolicy(retry_policy)
+                .namespace("service")
                 .build();
         client.start();
 
