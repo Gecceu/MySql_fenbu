@@ -1,9 +1,10 @@
 package client;
 
-public class clientapp {
-    public static final int Client_Port = 5144;
+import utils.params;
+
+public class CilentApp {
     public static void main(String[] args){
         Myclient client = new Myclient();
-        client.connect(Client_Port);
+        client.connect(params.MatserPort_Client);
     }
 }

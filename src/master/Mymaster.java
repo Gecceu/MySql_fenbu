@@ -1,7 +1,6 @@
 package master;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
 import java.io.DataInputStream;
@@ -11,13 +10,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JTextArea;
-import javax.xml.crypto.Data;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Mymaster extends JFrame{
     public static final int Region_Port =5143;
@@ -63,7 +60,7 @@ public class Mymaster extends JFrame{
             clientserver = new ServerSocket(port);
 
             while(true){
-                jta.append("等待客户连接\n");
+                jta.append("[SYSTEM] 等待客户连接\n");
                 socket = clientserver.accept();
                 Clienthandler handler = new Clienthandler(socket, jta);
                 Thread thread = new Thread(handler);
@@ -83,7 +80,7 @@ public class Mymaster extends JFrame{
             regionserver = new ServerSocket(port);
 
             while(true){
-                jta.append("等待从服务器连接\n");
+                jta.append("[SYSTEM] 等待从服务器连接\n\n");
                 socket = regionserver.accept();
                 Regionhandler handler = new Regionhandler(socket, jta);
                 Thread thread = new Thread(handler);
@@ -92,34 +89,6 @@ public class Mymaster extends JFrame{
         }catch(Exception e){
             e.printStackTrace();
         }
-    }
-
-    /*
-    * 通过表名找到ip地址
-     */
-    public String getAddrByTableName(String table_name){
-        for(HashMap.Entry<String, List<String>> entry : directory.entrySet()){
-            if(entry.getValue().contains(table_name)){
-                return new String(entry.getKey());                
-            }
-        }
-        return new String("-1");
-    }
-
-
-    /**
-     * 负载均衡
-     */
-    public String getMostSpareRegion(){
-        int mini = 0;
-        String spare_region_addr = "";
-        for(Map.Entry<String, List<String>> entry : directory.entrySet()){
-            if(entry.getValue().size() < mini){
-                mini = entry.getValue().size();                    
-                spare_region_addr = entry.getKey();
-            }
-        }
-        return spare_region_addr;
     }
 
     /**
@@ -137,16 +106,25 @@ public class Mymaster extends JFrame{
         @Override
         public void run(){
             try{
-                jta.append("客户端连接成功\n");
-                jta.append("客户端ip："+socket.getInetAddress().getHostAddress()+"\n");
+                String clinetip=socket.getInetAddress().getHostAddress();
+                jta.append("\n[INFO] 客户端连接成功\n");
+                jta.append("[INFO] 客户端ip："+clinetip+"\n");
                 while(true){
-                    byte[] buf = new byte[1024];
-                    int len = socket.getInputStream().read(buf);
-                    String sql = new String(buf, 0, len);
-                    jta.append("接收到的sql语句为："+sql+"\n");
+                    DataInputStream input_stream = new DataInputStream(socket.getInputStream());
+                    
+                    byte[] bytes=new byte[1024];
+                    int len = input_stream.read(bytes);
+                    String sql=new String(bytes, 0,len);
+                    String response;
+
+                    jta.append("[INFO] 接收到的sql为："+sql+"\n\n");
+                    response=MasterProcess.JudgeType(sql);
+
+                    DataOutputStream output_stream = new DataOutputStream(socket.getOutputStream());
+                    output_stream.writeUTF(response);
                 }
             }catch(Exception e){
-                jta.append("客户端断开连接或错误\n");
+                jta.append("[ERROR] 客户端断开连接或错误\n");
                 e.printStackTrace();
             }
         }
@@ -171,17 +149,17 @@ public class Mymaster extends JFrame{
                 
                 String response;
                 String url = input_stream.readUTF();
-                jta.append("接收到的url为："+url+"\n");
+
                 //查找注册节点 IP：name
                 if(region_names.containsKey(url)){
-                    jta.append("123");
+                    jta.append("[INFO] 从节点 " + url + " 已连接 \n");
                     response = region_names.get(url);
                 }
                 else{//新节点注册
                     response = "/server-" + regions_num; // region name
                     regions_num++;
                     region_names.put(url, response);
-                    jta.append(url + " " + response + "\n");
+                    jta.append("[INFO] 新节点注册 "+url + " " + response + "\n");
                 }
 
                 DataOutputStream output_stream = new DataOutputStream(socket.getOutputStream());
@@ -192,32 +170,10 @@ public class Mymaster extends JFrame{
 
             }catch(Exception e){
                 e.printStackTrace();
-                jta.append("[ERROR] Cannot connect to region server.\n");
+                jta.append("[ERROR] 无法连接从服务器.\n");
             }
         }
     }
 
-    public static void main(String args[]) throws IOException{
-        Mymaster master = new Mymaster();
-
-        Thread regionThread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                master.RegionServer(Region_Port);
-            }
-        });
-        regionThread.start();
-
-        Thread clientThread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                master.CilentServer(Client_Port);
-            }
-        });
-        clientThread.start();
-
-        Thread zookeeper_thread = new ZookeeperConnector(directory);
-        zookeeper_thread.start();
-    }
 }
 

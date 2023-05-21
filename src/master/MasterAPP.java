@@ -1,6 +1,8 @@
 package master;
 import java.io.IOException;
 
+import utils.params;
+
 
 public class MasterAPP {
     public static void main(String args[]) throws IOException{
@@ -9,7 +11,7 @@ public class MasterAPP {
         Thread regionThread = new Thread(new Runnable(){
             @Override
             public void run(){
-                master.RegionServer(Mymaster.Region_Port);
+                master.RegionServer(params.MasterPort_Region);
             }
         });
         regionThread.start();
@@ -17,7 +19,7 @@ public class MasterAPP {
         Thread clientThread = new Thread(new Runnable(){
             @Override
             public void run(){
-                master.CilentServer(Mymaster.Client_Port);
+                master.CilentServer(params.MatserPort_Client);
             }
         });
         clientThread.start();
