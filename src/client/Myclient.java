@@ -3,6 +3,10 @@ package client;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 import javax.swing.JButton;
@@ -17,7 +21,8 @@ public class Myclient extends JFrame{
    private JTextField jtf = new JTextField(); //用于输入sql的文本框
    private JButton jb = new JButton("发送"); //发送按钮
    private Container cc;
-   
+   private String sql;
+   private int REGION_PORT = 5314;
    public Myclient(){
       super("客户端");
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +49,7 @@ public class Myclient extends JFrame{
    }
 
    private void sendActionPerformed(java.awt.event.ActionEvent evt) {
-      String sql = jtf.getText();
+      sql = jtf.getText();
       jta.append("发送的sql语句为："+sql+"\n");
       try {
          socket.getOutputStream().write(sql.getBytes()); 
@@ -54,14 +59,44 @@ public class Myclient extends JFrame{
       }
    }
 
-   public void connect(int port) {
+   public void connect(int port) throws IOException {
       jta.append("正在连接服务器...\n");
       try {
          socket = new Socket("127.0.0.1",port);
          jta.append("连接成功！\n");
+         String  result = null;
+         InputStream is = socket.getInputStream();
+         BufferedReader br = new BufferedReader(new InputStreamReader(is));
+         String  regionIP= null;
+         //获取从节点IP地址并获取执行结果
+         while ((regionIP = br.readLine()) != null) {
+            jta.append(regionIP+"\n");//从节点IP地址
+            result = getMessage(sql,regionIP);
+            jta.append(result);
+         }
       }catch(Exception e){
          e.printStackTrace();
          jta.append("连接失败！\n");
       }
+   } 
+   
+   //与region建立socket连接并获取执行结果
+   private String getMessage(String sql,String regionIP){
+      String result = null;
+      try {
+         socket = new Socket("127.0.0.1",REGION_PORT);
+         //socket = new Socket(regionIP,REGION_PORT);
+         jta.append("连接成功！\n");
+         InputStream is = socket.getInputStream();
+         BufferedReader br = new BufferedReader(new InputStreamReader(is));
+         String info = null;
+            while ((info = br.readLine()) != null) {
+                result = result + info; 
+            }
+      }catch(Exception e){
+         e.printStackTrace();
+         jta.append("连接失败！\n");
+      }
+      return result;
    }
 }
