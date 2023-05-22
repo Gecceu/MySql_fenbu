@@ -17,7 +17,7 @@ public class Myregion extends JFrame{
     private ServerSocket server;
     private Socket socket;
 
-    private int CLIENT_SOCKET_PORT = 8001;//客户端连接端口
+    private int CLIENT_SOCKET_PORT = 5318;//客户端连接端口
 
     public Myregion(){
         super("从节点服务器");
@@ -66,7 +66,7 @@ public class Myregion extends JFrame{
                 jta.append("客户端连接成功\n");
                 jta.append("客户端ip："+socket.getInetAddress().getHostAddress()+"\n");
                 while(true){
-                    byte[] buf = new byte[1024];
+                    byte[] buf = new byte[5120];
                     int len = socket.getInputStream().read(buf);
                     String sql = new String(buf, 0, len);
                     jta.append("接收到的sql语句为："+sql+"\n");
