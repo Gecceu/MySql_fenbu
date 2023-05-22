@@ -84,6 +84,9 @@ public class VisitMysql {
         result = select(sql);
 
         return result;
+    }else if(str.indexOf("desc")>=0){
+        result = select(sql);
+        return result;
     }else{
         int row;
         row = update(sql);
