@@ -15,12 +15,7 @@ public class RegionSocket {
         this.sql = sql;
     }
     public void connect(String IP,int port) throws IOException{
-<<<<<<< HEAD
         jta.append("正在连接从服务器...\n");
-=======
-        jta.append("正在连接服务器...\n");
-        IP = IP.trim();
->>>>>>> 9a6f7425866886358b8849705f93091bb0db1abc
         try {
            socket = new Socket(IP.trim(),port);
            jta.append("从服务器连接成功！\n");
