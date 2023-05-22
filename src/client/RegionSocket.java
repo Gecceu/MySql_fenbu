@@ -16,6 +16,7 @@ public class RegionSocket {
     }
     public void connect(String IP,int port) throws IOException{
         jta.append("正在连接服务器...\n");
+        IP = IP.trim();
         try {
            socket = new Socket(IP,port);
            jta.append("连接成功！\n");
