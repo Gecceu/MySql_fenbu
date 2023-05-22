@@ -20,7 +20,7 @@ import java.net.NetworkInterface;
 import java.net.Socket;
 
 public class ZookeeperManager {
-    static final String ZOOKEEPER_SERVER = "localhost:2181";
+    static final String ZOOKEEPER_SERVER = params.ZooKeeperServer;
   
     static CuratorFramework client;
   
