@@ -5,8 +5,6 @@ import java.io.IOException;
 import utils.params;
 
 public class CilentApp {
-    private static final String MASTER_IP = "127.0.0.1";
-    
     public static void main(String[] args) throws IOException{
         Myclient client = new Myclient();
         
@@ -14,7 +12,7 @@ public class CilentApp {
             @Override
             public void run(){
                 try {
-                    client.connect(MASTER_IP,params.MatserPort_Client);
+                    client.connect(params.Master_ip,params.MatserPort_Client);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

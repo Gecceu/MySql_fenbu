@@ -4,6 +4,8 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
+import utils.params;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,9 +20,10 @@ public class FTPConnector {
     Basic Conf.
      */
     private static final int FTP_PORT = 21;
-    private static final String FTP_IP = "192.168.218.1";
-    private static final String USER_NAME = "10438";
-    private static final String PASSWORD = "wyl010720";
+    private static final String FTP_IP = params.FTP_IP;
+    private static final String USER_NAME = params.Ftp_Username;
+    private static final String PASSWORD = params.Ftp_Password;
+    
     private static final FTPClient FTP_CLIENT = new FTPClient();
 
     public static boolean connectFTP() throws Exception {

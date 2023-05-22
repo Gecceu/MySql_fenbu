@@ -13,7 +13,7 @@ public class MasterProcess {
         String reponse;
         if(sql.contains("create table")){
             reponse = getMostSpareRegion();
-            if(!getAddrByTableName(exisittable(sql)).equals(null)){
+            if(getAddrByTableName(exisittable(sql))!=null){
                 reponse = "该表已存在";
             }
         }
