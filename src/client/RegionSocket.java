@@ -15,16 +15,16 @@ public class RegionSocket {
         this.sql = sql;
     }
     public void connect(String IP,int port) throws IOException{
-        jta.append("正在连接服务器...\n");
+        jta.append("正在连接从服务器...\n");
         try {
-           socket = new Socket(IP,port);
-           jta.append("连接成功！\n");
+           socket = new Socket(IP.trim(),port);
+           jta.append("从服务器连接成功！\n");
            Regionhandler regionhandler = new Regionhandler(socket, jta, sql);
            Thread thread = new Thread(regionhandler);
            thread.start();
         }catch(Exception e){
            e.printStackTrace();
-           jta.append("连接失败！\n");
+           jta.append("从服务器连接失败！\n");
         }
      }
 

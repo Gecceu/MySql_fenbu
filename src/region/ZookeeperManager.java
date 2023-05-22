@@ -14,6 +14,8 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 
+import utils.params;
+
 import java.net.NetworkInterface;
 import java.net.Socket;
 
@@ -28,9 +30,9 @@ public class ZookeeperManager {
 
     static String path = "/";
     
-    static final String MASTER_SERVER_IP = "localhost";
+    static final String MASTER_SERVER_IP = params.Master_ip;
    
-    static final int MASTER_PORT = 5143;
+    static final int MASTER_PORT = params.MasterPort_Region;
 
     public static void zookeeperConnect() throws SQLException {
         //获取数据库表名
@@ -71,14 +73,14 @@ public class ZookeeperManager {
             } else {
                 //使用ftp备份表和索引文件
                 
-                /*
+                
                 FTPConnector.unloadFile("table_catalog");
                 FTPConnector.unloadFile("index_catalog");
                 for (String t : table_list) {
                     FTPConnector.unloadFile(t);
                     FTPConnector.unloadFile(t + "_index.index");
                 }
-                */
+                
             }
             //创建zk节点，值为ip地址和tableList
             client.create().withMode(CreateMode.EPHEMERAL).forPath(path, data.toString().getBytes());

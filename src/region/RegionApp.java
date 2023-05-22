@@ -7,7 +7,7 @@ public class RegionApp {
     public static void main(String[] args) {
         try {
             //连接ftp和zookeeper
-            //FTPConnector.connectFTP();
+            FTPConnector.connectFTP();
             ZookeeperManager.zookeeperConnect();
 
             Myregion region = new Myregion();

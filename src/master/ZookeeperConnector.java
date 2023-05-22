@@ -7,6 +7,8 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 
+import utils.params;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ZookeeperConnector extends Thread{
-    private  static final String SERVER_STRING = "localhost:2181";
+    private  static final String SERVER_STRING = params.ZooKeeperServer;
 
     public ZookeeperConnector(HashMap<String, List<String>> directory) throws IOException{
         try{
