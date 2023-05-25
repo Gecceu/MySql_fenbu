@@ -13,7 +13,7 @@ public class params {
 
     public static final String Database_Password = "dbcourse";
 
-    public static final String FTP_IP = "192.168.218.1";
+    public static final String FTP_IP = "192.168.43.152";
 
     public static final String Ftp_Username = "10438";
 

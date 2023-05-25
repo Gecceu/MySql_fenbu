@@ -50,6 +50,7 @@ public class Myclient extends JFrame{
    private void sendActionPerformed(java.awt.event.ActionEvent evt) {
       sql = jtf.getText();
       jta.append("发送的sql语句为："+sql+"\n");
+      jtf.setText("");
       try {
          socket.getOutputStream().write(sql.getBytes()); 
          socket.getOutputStream().flush(); 
@@ -60,16 +61,16 @@ public class Myclient extends JFrame{
 
    //建立socket连接
    public void connect(String IP,int port) throws IOException{
-      jta.append("正在连接服务器...\n");
+      jta.append("[INFO]正在连接主服务器...\n\n");
       try {
          socket = new Socket(IP,port);
-         jta.append("连接成功！\n");
+         jta.append("[INFO]主服务器连接成功！\n");
          MasterSocket mastersocket = new MasterSocket(socket, jta);
          Thread thread = new Thread(mastersocket);
          thread.start();
       }catch(Exception e){
          e.printStackTrace();
-         jta.append("连接失败！\n");
+         jta.append("[WARN]主服务器连接失败！\n");
       }
    } 
 
@@ -90,7 +91,7 @@ public class Myclient extends JFrame{
             while(true){
                int len = socket.getInputStream().read(buf);
                String regionIP = new String(buf, 0, len);
-               jta.append("从节点IP地址为："+regionIP+"\n");
+               jta.append("从节点IP地址为："+regionIP+"\n\n");
                //创建线程与从节点连接获取执行结果 
                RegionSocket regionSocket = new RegionSocket(jta, sql);
                Thread regionThread = new Thread(new Runnable(){

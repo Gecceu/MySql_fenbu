@@ -17,15 +17,19 @@ public class MasterProcess {
                 reponse = "该表已存在";
             }
         }
+        else if(sql.contains("drop table")){
+            reponse=getAddrByTableName(Getname.getdropname(sql));
+        }
         else{
             reponse = getAddrByTableName(exisittable(sql));
+            System.out.println(getAddrByTableName(exisittable(sql)));
             if(reponse.equals(null)){
                 reponse="该表不存在";
             }
         }
         return reponse;
     }
-    
+
     private static String exisittable(String sql){
         Set <String> tableList = new HashSet<>();
         Getname.parseSql(Getname.dSql(sql), tableList);
@@ -41,7 +45,7 @@ public class MasterProcess {
                 return new String(entry.getKey());                
             }
         }
-        return new String("-1");
+        return null;
     }
     
     /**
