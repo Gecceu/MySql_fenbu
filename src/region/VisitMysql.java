@@ -50,6 +50,8 @@ public class VisitMysql {
         statement.close();
         connection.close();
 
+        System.out.println(result);
+
         return result;
     }
 
