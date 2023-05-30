@@ -7,17 +7,17 @@ public class params {
 
     public static final int ClientPort_Region = 5318;
 
-    public static final String Master_ip = "127.0.0.1";
+    public static final String Master_ip = "10.181.214.107";
 
     public static final String Database_Name = "root";
 
     public static final String Database_Password = "dbcourse";
 
-    public static final String FTP_IP = "192.168.43.152";
+    public static final String FTP_IP = "10.181.214.107";
 
-    public static final String Ftp_Username = "10438";
+    public static final String Ftp_Username = "";
 
-    public static final String Ftp_Password = "wyl010720";
+    public static final String Ftp_Password = "";
 
     public static final String ZooKeeperServer = Master_ip+":2181";
 }
